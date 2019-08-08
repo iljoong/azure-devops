@@ -1,0 +1,31 @@
+azure_subscription variables:
+  subscription_id: ''
+  tenant_id: ''
+  client_id: ''
+  client_secret: ''
+
+azure_build variables:
+  buildConfiguration: 'Release'
+  rgname: 'test-dnc'
+  imagename: "app$(Build.BuildId)"
+  publisher: '_update_here_'
+  offer: '_update_here_'
+  sig_rg: '_update_here_'
+  sig_name: '_update_here_'
+  sig_prefix: '_update_here_'
+
+azure_vmss variables:
+  vmssName: "_update_here_"
+  vmSku: "Standard_D2s_v3"
+  vnetname: "_update_here_"
+  subnetname: "_update_here_"
+  subnet: "_update_here_"
+  adminUsername: "_update_here_"
+  keyVaultName: "_update_here_"
+  secretName: "_update_here_"
+  certificateUrl: "_update_here_"
+  scriptUrl: "_update_here_"
+  appsettingsUrl: "_update_here_"
+  thumbprint: "_update_here_"
+  identityName: "_update_here_"
+  ilbip: "_update_here_"

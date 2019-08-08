@@ -1,0 +1,79 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+# trigger set
+trigger: none
+#trigger:
+#- master
+
+pool:
+  name: 'ilkim'
+
+variables:
+- group: azure_subscription
+- group: azure_build
+- name: buildConfiguration
+  value: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**/*.csproj'
+    arguments: '-c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/app'
+    modifyOutputPath: false
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Debug
+      Write-Host "$(Build.ArtifactStagingDirectory)\app\app.zip"
+      Write-Host "$(subscription_id)"
+      Write-Host "$(tenant_id)"
+      Write-Host "$(client_id)"
+      Write-Host "$(client_secret)"
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # modify path string for Windows env and set VSO variable
+      $mpath = $env:BUILD_ARTIFACTSTAGINGDIRECTORY -replace "\\","\\\\"
+      Write-Host "##vso[task.setvariable variable=mpath]$mpath"
+
+- task: PackerBuild@1
+  inputs:
+    templateType: 'custom'
+    customTemplateLocation: 'packer/packer.json'
+    customTemplateParameters: |
+      {
+        "client_id":"$(client_id)", 
+        "client_secret":"$(client_secret)",
+        "tenant_id":"$(tenant_id)",
+        "subscription_id":"$(subscription_id)",
+        "packagepath":"$(mpath)\\\\app\\\\app.zip",
+        "imagename":"$(imagename)",
+        "rgname":"$(rgname)"
+      }
+
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: 'Azure_MSFT'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az sig image-definition create -g $(sig_rg) --gallery-name $(sig_name) --gallery-image-definition $(sig_prefix)-$(Build.BuildId) --publisher $(publisher) --offer $(offer) --sku $(Build.BuildId) --os-type Windows'
+
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: 'Azure_MSFT'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az sig image-version create -g $(sig_rg) --gallery-name $(sig_name) --gallery-image-definition $(sig_prefix)-$(Build.BuildId) --gallery-image-version 1.0.$(Build.BuildId) --target-regions "koreacentral=1" --replica-count 3 --managed-image "/subscriptions/$(subscription_id)/resourceGroups/$(rgname)/providers/Microsoft.Compute/images/$(imagename)"'

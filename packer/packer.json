@@ -1,0 +1,64 @@
+{
+    "variables": {
+      "packagepath": "a.zip",
+      "rgname": "test-dnc",
+      "imagename": "app000",
+
+      "client_id": "aaaa",
+      "client_secret": "bbbb",
+      "tenant_id": "cccc",
+      "subscription_id": "ddd"
+    },
+    "builders": [
+      {
+        "type": "azure-arm",
+        "client_id": "{{user `client_id`}}",
+        "client_secret": "{{user `client_secret`}}",
+        "tenant_id": "{{user `tenant_id`}}",
+        "subscription_id": "{{user `subscription_id`}}",
+  
+        "managed_image_resource_group_name": "{{user `rgname`}}",
+        "managed_image_name": "{{user `imagename`}}",
+  
+        "os_type": "Windows",
+        "image_publisher": "MicrosoftWindowsServer",
+        "image_offer": "WindowsServerSemiAnnual",
+        "image_sku": "Datacenter-Core-1803-with-Containers-smalldisk",
+  
+        "communicator": "winrm",
+        "winrm_use_ssl": true,
+        "winrm_insecure": true,
+        "winrm_timeout": "5m",
+        "winrm_username": "packer",
+  
+        "location": "koreacentral",
+        "vm_size": "Standard_D2s_v3",
+
+        "async_resourcegroup_delete": "true"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "file",
+        "source": "{{user `packagepath`}}",
+        "destination": "$env:temp\\package.zip"
+      },
+      {
+        "type": "powershell",
+        "inline": [
+          "Add-WindowsFeature Web-Server,Web-Asp-Net45,NET-Framework-Features",
+          "Invoke-WebRequest https://download.visualstudio.microsoft.com/download/pr/5ee633f2-bf6d-49bd-8fb6-80c861c36d54/caa93641707e1fd5b8273ada22009246/dotnet-hosting-2.2.1-win.exe -outfile $env:temp\\dotnet-hosting-2.2.1-win.exe",
+  
+          "Start-Process $env:temp\\dotnet-hosting-2.2.1-win.exe  -ArgumentList '/quiet' -Wait",
+          "Expand-Archive $env:temp\\package.zip -DestinationPath C:\\inetpub\\wwwroot -Force"
+        ]
+      },
+      {
+        "type": "powershell",
+        "inline": [
+          "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit",
+          "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+        ]
+      }
+    ]
+  }

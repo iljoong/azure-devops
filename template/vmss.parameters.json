@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmssName": {
+            "value": "_add_here_"
+        },
+        "vmSku": {
+            "value": "Standard_D2s_v3"
+        },
+        "vnetname": {
+            "value": "_add_here_"
+        },
+        "subnetname": {
+            "value": "_add_here_"
+        },
+        "subnet": {
+            "value": "10.0.3.0/24"
+        },
+        "ilbip": {
+            "value": "10.0.3.100"
+        },
+        "adminUsername": {
+            "value": "azadmin"
+        },
+        "adminPassword": {
+            "reference": {
+                "keyVault": {
+                  "id": "_add_here_"
+                },
+                "secretName": "adminpassword"
+              }
+        },
+        "imageId": {
+            "value": "_add_here_"
+        },
+        "vaultResourceId": {
+            "value": "_add_here_"
+        },
+        "certificateUrl" : {
+            "value": "_add_here_"
+        },
+        "scriptUrl": {
+            "value": "https://azureblob.blob.core.windows.net/container/iis_script.ps1"
+        },
+        "appsettingsUrl": {
+            "value": "https://azureblob.blob.core.windows.net/container/appsettings.json"
+        },
+        "thumbprint": {
+            "value": "_add_here_"
+        },
+        "identityName": {
+            "value": "_add_here_"
+        }
+    }
+}
