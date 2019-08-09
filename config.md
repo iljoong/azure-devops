@@ -5,11 +5,12 @@
 ## Prepare Environment
 
 1. prepare azure environment
-    - vnet
-    - keyvault
+    - Azure DevOps
+    - Virtual Network
+    - Key Vault
         - add a _certificate_
         - add a _password secret_
-    - blob account
+    - Blob account
         - upload files in [azure/blob](./azure/blob/) to blob account and update variables
 2. provision a Window VM for build agent
 3. install devops agent software on build agent
@@ -24,7 +25,7 @@
 4. add group variables
     - azure_subscription
     - azure_build
-5. add a service connection for _Azure Subscription_ and name it `Azure_[MSFT]`
+5. add a service connection for _Azure Subscription_ and name it `MyAzure_Subscription`
 
 > trigger is disabled in `build-piplines.yml` 
 
@@ -61,10 +62,6 @@
 Manually trigger build and release
 
 ## References
-
-For YAML, everything is written in yaml and no GUI settings. Use `trigger`, `pool`, `variable group` and so on for build script.
-
-DevOps references:
 
   - Quick start: https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=tfs-2018-2
   - Dotnet Core: https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/dotnet-core?view=azure-devops
