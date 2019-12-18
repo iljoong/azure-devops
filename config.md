@@ -29,6 +29,17 @@
 
 > trigger is disabled in `build-piplines.yml` 
 
+## PR build Setup
+
+1. create a new build pipeline for PR build
+    - use `build-pr-pipelines.yml` for PR build
+    - name it `build-pr-pipeline`
+2. go to Repos/Branches and select Branch policies for `master` branch
+3. add build policy and select _build-pr-pipeline_ for build pipeline
+
+> For more information about branc policies, read [documentation](https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops)
+
+
 ## Release Setup
 
 1. create a new release pipeline (`release-pipeline`) and choose `empty job`

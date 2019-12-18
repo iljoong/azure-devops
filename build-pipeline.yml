@@ -20,6 +20,11 @@ variables:
 steps:
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'test'
+    projects: 'apiapp.test/apiapptest.csproj'
+    testRunTitle: 'Test run'
+- task: DotNetCoreCLI@2
+  inputs:
     command: 'publish'
     publishWebProjects: false
     projects: '**/*.csproj'

@@ -76,7 +76,7 @@
         {
             "type": "Microsoft.Network/loadBalancers",
             "sku": {
-                "name": "Basic"
+                "name": "Standard"
             },
             "name": "[variables('loadBalancerName')]",
             "apiVersion": "[variables('networkApiVersion')]",
@@ -192,13 +192,13 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "sku": {
-                "name": "Basic"
+                "name": "Standard"
             },
             "name": "[variables('pipName')]",
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "properties": {
-                "publicIPAllocationMethod": "Dynamic"
+                "publicIPAllocationMethod": "Static"
             }
         },
         {
