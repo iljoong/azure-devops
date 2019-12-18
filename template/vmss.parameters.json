@@ -26,7 +26,7 @@
         "adminPassword": {
             "reference": {
                 "keyVault": {
-                  "id": "_add_here_"
+                  "id": "/subscriptions/399042cf-e391-4471-9767-91f652d4ffc1/resourceGroups/test-dnc/providers/Microsoft.KeyVault/vaults/ikdnckv"
                 },
                 "secretName": "adminpassword"
               }

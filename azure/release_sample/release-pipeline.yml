@@ -4,12 +4,21 @@ variables:
 - group: azure_build
 
 steps:
+- powershell: |
+   # Write your PowerShell commands here.
+   Write-Host "imageId : /subscriptions/$(subscription_id)/resourceGroups/$(sig_rg)/providers/Microsoft.Compute/galleries/$(sig_name)/images/$(sig_prefix)-$(Build.BuildId)/versions/1.0.$(Build.BuildId)"
+   Write-Host "scripturl: $(scripturl)" 
+   Write-Host "appseetingsurl: $(appsettingsurl)"
+   Write-Host "thumbprint $(thumbprint)"
+   Write-Host "certificateurl: $(certificateurl)"
+  displayName: 'PowerShell Script'
+
 - task: AzureResourceGroupDeployment@2
   displayName: 'VMSS Deploy'
   inputs:
     azureSubscription: $(subscriptionname)
     resourceGroupName: "$(rgname)"
     location: 'Korea Central'
-    csmFile: '$(System.DefaultWorkingDirectory)/_azdvop_src/template/vmss.json'
+    csmFile: '$(System.DefaultWorkingDirectory)/_azdvop_src/template/vmss_edisk.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/_azdvop_src/template/vmss.parameters.json'
-    overrideParameters: '-imageId "/subscriptions/$(subscription_id)/resourceGroups/$(rgname)/providers/Microsoft.Compute/galleries/$(signame)/images/$(sigdef)-$(Build.BuildId)/versions/1.0.$(Build.BuildId)"'
+    overrideParameters: '-vmssName $(prodvmss) -vmSku "Standard_D2s_v3" -instanceCount "1" -vnetname $(vnetname) -subnetname $(subnetname) -ilbip $(ilbip) -subnet $(subnet) -adminUsername $(adminUsername) -imageId "/subscriptions/$(subscription_id)/resourceGroups/$(sig_rg)/providers/Microsoft.Compute/galleries/$(sig_name)/images/$(sig_prefix)-$(Build.BuildId)/versions/1.0.$(Build.BuildId)" -vaultResourceId $(vaultid) -certificateUrl $(certificateurl) -scriptUrl $(scripturl) -appsettingsUrl $(appsettingsurl) -thumbprint $(thumbprint) -identityName $(identityName)'
