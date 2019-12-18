@@ -15,17 +15,25 @@
 2. provision a Window VM for build agent
 3. install devops agent software on build agent
 
+## Variables & Azure Subscription
+
+1. add `variable group` in __Pipeline/Library__, please refer variables in [variables.yml](./variables.yml)
+    - azure_subscription
+    - azure_build
+    - azure_vmss
+2. add a service connection for _Azure Subscription_ in __Settings/Service connections__
+    - create a `Azure Resource Manager`
+    - use connection name as `MyAzure_Subscription`
+    - check `allow all pipelines to use this connection`
+
 ## Build Setup
 
 1. create a new project in Azure DevOps
 2. push app source to the project repo
 3. create a build pipeline
-    - use _classic_ mode to create a new pipeline and import `build-pipelines.yml`
-    - update `agent pool` name
-4. add group variables
-    - azure_subscription
-    - azure_build
-5. add a service connection for _Azure Subscription_ and name it `MyAzure_Subscription`
+    - create a new pipeline with `Azure Repos Git (YAML)` and import `build-pipelines.yml`
+    - update some variables like `agent pool` name
+4. rename it as `build-pipeline`
 
 > trigger is disabled in `build-piplines.yml` 
 
@@ -33,9 +41,9 @@
 
 1. create a new build pipeline for PR build
     - use `build-pr-pipelines.yml` for PR build
-    - name it `build-pr-pipeline`
-2. go to Repos/Branches and select Branch policies for `master` branch
-3. add build policy and select _build-pr-pipeline_ for build pipeline
+2. rename it as `build-pr-pipeline`
+3. go to Repos/Branches and select Branch policies for `master` branch
+4. add build policy and select _build-pr-pipeline_ for build pipeline
 
 > For more information about branc policies, read [documentation](https://docs.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops)
 
