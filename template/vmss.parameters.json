@@ -40,6 +40,9 @@
         "certificateUrl" : {
             "value": "_add_here_"
         },
+        "winrmCertUrl": {
+            "value": "_add_here_"
+        },
         "scriptUrl": {
             "value": "https://azureblob.blob.core.windows.net/container/iis_script.ps1"
         },

@@ -86,11 +86,18 @@
 1. create a new release pipeline (`upgrade-pipeline`) and choose `empty job`
 2. create a stage and name it `Upgrade certificate`
 3. assign agent pool to your agent VM for this job
-4. create a _Azure CLI_ task
-5. select `Inline script` in `Script Location`
+4 create a _Powershell_ task for debugging
+    - select `inline` type
+    - add following script
+    ```
+    Write-Host "certificateurl: $(certificateurl)"
+    Write-Host "thumbprint: $(thumbprint)"
+    ```
+5. create a _Azure CLI_ task
+   - select `Inline script` in `Script Location`
    - add following script in `Inline Script`
    ```
-   az vmss update -g $(rgname) -n $(prodvmss) --set virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl="$(certificateurl)" --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
+   az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl="$(certificateurl)" --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
    ```
 6. link variable groups (`azure_subscription`, `azure_build`, `azure_vmss`)to upgrade pipeline
 
@@ -107,3 +114,4 @@ Manually trigger build and release
   - trigger: https://docs.microsoft.com/en-us/azure/devops/pipelines/build/triggers?view=azure-devops&tabs=yaml
   - variables: https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops&tabs=yaml
   - predefined variables: https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
+  - (TODO) Reference secrets with dynamic ID: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-keyvault-parameter#reference-secrets-with-dynamic-id

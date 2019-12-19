@@ -41,6 +41,9 @@
         "certificateUrl": {
             "type": "string"
         },
+        "winrmCertUrl": {
+            "type": "string"
+        },
         "scriptUrl": {
             "type": "string"
         },
@@ -348,7 +351,7 @@
                                     },
                                     {
                                         "protocol": "Https",
-                                        "certificateUrl": "[parameters('certificateUrl')]"
+                                        "certificateUrl": "[parameters('winrmCertUrl')]"
                                     }
                                 ]
                             },
