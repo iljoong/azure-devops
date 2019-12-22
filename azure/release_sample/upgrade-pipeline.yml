@@ -3,9 +3,25 @@ variables:
 - group: azure_build
 
 steps:
+- powershell: |
+   Write-Host "certificateurl: $(certificateurl)"
+   Write-Host "thumbprint: $(thumbprint)"
+   
+  displayName: 'PowerShell Script'
+
 - task: AzureCLI@1
-  displayName: 'Azure CLI '
+  displayName: 'Azure CLI - Add certificate'
   inputs:
     azureSubscription: 'MyAzure_Subscription'
     scriptLocation: inlineScript
-    inlineScript: 'az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl="$(certificateurl)" --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"'
+    inlineScript: |
+     az vmss update -g $(rgname) -n $(vmssName) --add virtualMachineProfile.osProfile.secrets[0].vaultCertificates "{""certificateUrl"": ""$(certificateurl)"", ""certificateStore"": ""My""}'
+
+steps:
+- task: AzureCLI@1
+  displayName: 'Azure CLI - Update certificate'
+  inputs:
+    azureSubscription: 'MyAzure_Subscription'
+    scriptLocation: inlineScript
+    inlineScript: |
+     az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"

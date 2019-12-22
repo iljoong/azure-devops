@@ -11,8 +11,8 @@
             "defaultValue": "Standard_D2s_v3"
         },
         "instanceCount": {
-            "type": "string",
-            "defaultValue": "1"
+            "type": "int",
+            "defaultValue": 1
         },
         "vnetname": {
             "type": "string"
@@ -290,7 +290,7 @@
             "sku": {
                 "name": "[parameters('vmSku')]",
                 "tier": "Standard",
-                "capacity": "[int(parameters('instanceCount'))]"
+                "capacity": "[parameters('instanceCount')]"
             },
             "name": "[parameters('vmssName')]",
             "apiVersion": "[variables('computeApiVersion')]",
