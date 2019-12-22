@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using apiapp;
 
 namespace apiapp.Controllers
 {
@@ -14,7 +15,9 @@ namespace apiapp.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            Val v = new Val();
+
+            return new string[] { $"values{v.New()}", $"values{v.New()}" };
         }
 
         [HttpGet("/health")]

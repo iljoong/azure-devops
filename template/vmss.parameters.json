@@ -26,7 +26,7 @@
         "adminPassword": {
             "reference": {
                 "keyVault": {
-                  "id": "_add_here_"
+                  "id": "_add_here_manually_"
                 },
                 "secretName": "adminpassword"
               }
@@ -38,6 +38,9 @@
             "value": "_add_here_"
         },
         "certificateUrl" : {
+            "value": "_add_here_"
+        },
+        "winrmCertUrl": {
             "value": "_add_here_"
         },
         "scriptUrl": {
