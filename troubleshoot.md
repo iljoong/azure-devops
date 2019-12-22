@@ -63,3 +63,20 @@ if a target VMSS is stopped or something wrong. Azure arm deployment won't work 
   }
 }
 ```
+## Handling ARM Changes
+
+ARM behavior changes sometimes, following CLI was worked for updating certificate but it creates an internal error.
+
+```
+az vmss update -g $(rgname) -n $(prodvmss) --set virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl="$(certificateurl)" --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
+```
+
+Upgrade CLI changed as following
+
+> Note that following CLIs run in a separated CLI script, see [upgrade-pipline.yml](./azure/release_sample/upgrade-pipeline.yml). 
+
+```
+az vmss update -g $(rgname) -n $(vmssName) --add virtualMachineProfile.osProfile.secrets[0].vaultCertificates "{""certificateUrl"": ""$(certificateurl)"", ""certificateStore"": ""My""}'
+
+az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
+```
