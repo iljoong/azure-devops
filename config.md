@@ -93,13 +93,19 @@
     Write-Host "certificateurl: $(certificateurl)"
     Write-Host "thumbprint: $(thumbprint)"
     ```
-5. create a _Azure CLI_ task
+5. create two  _Azure CLI_ tasks
    - select `Inline script` in `Script Location`
    - add following script in `Inline Script`
    ```
-   az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl="$(certificateurl)" --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
+    az vmss update -g $(rgname) -n $(vmssName) --add virtualMachineProfile.osProfile.secrets[0].vaultCertificates "{""certificateUrl"": ""$(certificateurl)"", ""certificateStore"": ""My""}"
+   ```
+   - add another script in `Inline Script`
+   ```
+    az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
    ```
 6. link variable groups (`azure_subscription`, `azure_build`, `azure_vmss`)to upgrade pipeline
+
+> VMSS template behavior has been changed. You no longer modify `virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl` but you need to __add__ new certficate.
 
 ## Build and Release
 
