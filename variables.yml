@@ -31,4 +31,4 @@ azure_vmss variables:
   thumbprint: "_update_here_"
   identityName: "_update_here_"
   ilbip: "_update_here_"
-  valutid: "_update_here_"
+  vaultid: "_update_here_"
