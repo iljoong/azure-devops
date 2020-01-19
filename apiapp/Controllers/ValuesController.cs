@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using apiapp;
+using Microsoft.Extensions.Configuration;
 
 namespace apiapp.Controllers
 {
@@ -11,6 +12,22 @@ namespace apiapp.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        string teststring;
+        string sqlconn;
+
+        public ValuesController(IConfiguration _config)
+        {
+            // print all config
+            /*foreach(var conf in _config.AsEnumerable())
+            {
+                Console.WriteLine($"Trace: Config: {conf.Key}:{conf.Value}");
+            }*/
+
+            // get config
+            teststring = _config["app:teststring"] ?? "NO VALUE SET";
+            sqlconn = _config["app:sqlconn"] ?? "NO VALUE SET";
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -24,6 +41,18 @@ namespace apiapp.Controllers
         public ActionResult<string> Health()
         {
             return "okay";
+        }
+
+        [HttpGet("/test")]
+        public ActionResult<string> Test()
+        {
+            return teststring;
+        }
+
+        [HttpGet("/sql")]
+        public ActionResult<string> Sql()
+        {
+            return sqlconn;
         }
 
         // GET api/values/5

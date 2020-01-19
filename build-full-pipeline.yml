@@ -66,3 +66,15 @@ steps:
         "imagename":"$(imagename)",
         "rgname":"$(rgname)"
       }
+
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: 'MyAzure_Subscription'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az sig image-definition create -g $(sig_rg) --gallery-name $(sig_name) --gallery-image-definition $(sig_prefix)-$(Build.BuildId) --publisher $(publisher) --offer $(offer) --sku $(Build.BuildId) --os-type Windows'
+
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: 'MyAzure_Subscription'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az sig image-version create -g $(sig_rg) --gallery-name $(sig_name) --gallery-image-definition $(sig_prefix)-$(Build.BuildId) --gallery-image-version 1.0.$(Build.BuildId) --target-regions "koreacentral=1" --replica-count 3 --managed-image "/subscriptions/$(subscription_id)/resourceGroups/$(rgname)/providers/Microsoft.Compute/images/$(imagename)"'

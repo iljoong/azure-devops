@@ -1,0 +1,9 @@
+# TODOs
+
+1. KV
+
+add `secret` and upload `certificate` in KV (not working)
+
+> NO official TF example
+
+2.

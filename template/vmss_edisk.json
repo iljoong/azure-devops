@@ -296,7 +296,7 @@
             "apiVersion": "[variables('computeApiVersion')]",
             "location": "[variables('location')]",
             "identity": {
-                "type": "userAssigned",
+                "type": "UserAssigned",
                 "userAssignedIdentities": {
                     "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('identityName'))]": {}
                 }

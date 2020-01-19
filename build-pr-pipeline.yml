@@ -9,7 +9,7 @@ trigger: none
 #- master
 
 pool:
-  vmImage: 'windows-latest'
+  name: 'devopsdemo'
 
 variables:
 - group: azure_subscription

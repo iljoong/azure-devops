@@ -2,11 +2,20 @@
     "variables": {
       "packagepath": "package.zip",
       "rgname": "rgname",
-      "imagename": "app000"
+      "imagename": "app000",
+
+      "client_id": "aaaa",
+      "client_secret": "bbbb",
+      "tenant_id": "cccc",
+      "subscription_id": "ddd"
     },
     "builders": [
       {
         "type": "azure-arm",
+        "client_id": "{{user `client_id`}}",
+        "client_secret": "{{user `client_secret`}}",
+        "tenant_id": "{{user `tenant_id`}}",
+        "subscription_id": "{{user `subscription_id`}}",
   
         "managed_image_resource_group_name": "{{user `rgname`}}",
         "managed_image_name": "{{user `imagename`}}",

@@ -1,0 +1,10 @@
+.vscode
+.terraform
+.terraform.*
+terraform.*
+override.tf
+_*
+bin
+obj
+out
+appsettings.json
