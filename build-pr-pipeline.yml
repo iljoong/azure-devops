@@ -12,8 +12,6 @@ pool:
   name: 'devopsdemo'
 
 variables:
-- group: azure_subscription
-- group: azure_build
 - name: buildConfiguration
   value: 'Release'
 

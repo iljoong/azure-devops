@@ -75,7 +75,7 @@
     - add __template__ (`/template/vmss_edisk.json`) and __template parameters__ (`/template/vmss.parameters.json`) from template folder
     - add following override template parameters
     ```
-    -vmssName $(prodvmss) -vmSku "Standard_D2s_v3" -instanceCount "1" -vnetname $(vnetname) -subnetname $(subnetname) -ilbip "10.0.3.100" -subnet "10.0.3.0/24" -adminUsername "iljoong" -imageId "/subscriptions/$(subscription_id)/resourceGroups/$(sig_rg)/providers/Microsoft.Compute/galleries/$(sig_name)/images/$(sig_prefix)-$(Build.BuildId)/versions/1.0.$(Build.BuildId)" -vaultResourceId $(vaultid) -certificateUrl $(certificateurl) -scriptUrl $(scripturl) -appsettingsUrl $(appsettingsurl) -thumbprint $(thumbprint) -identityName $(identityName)
+    -vmssName $(vmssName) -vmSku "Standard_D2s_v3" -instanceCount 1 -vnetname $(vnetname) -subnetname $(subnetname) -ilbip $(ilbip) -subnet $(subnet) -adminUsername $(adminUsername) -imageId /subscriptions/$(subscription_id)/resourceGroups/$(rgname)/providers/Microsoft.Compute/images/app$(Build.BuildId) -vaultResourceId $(vaultid) -certificateUrl $(certificateurl) -winrmCertUrl $(winrmCertUrl) -scriptUrl $(scripturl) -appsettingsUrl $(appsettingsurl) -thumbprint $(thumbprint) -identityName $(identityName)
     ```
 7. link variable groups (`azure_subscription`, `azure_build`, `azure_vmss`)to release pipeline
 
@@ -86,18 +86,21 @@
 1. create a new release pipeline (`upgrade-pipeline`) and choose `empty job`
 2. create a stage and name it `Upgrade certificate`
 3. assign agent pool to your agent VM for this job
-4 create a _Powershell_ task for debugging
+4. create a _Powershell_ task for debugging
     - select `inline` type
     - add following script
     ```
     Write-Host "certificateurl: $(certificateurl)"
     Write-Host "thumbprint: $(thumbprint)"
     ```
-5. create a _Azure CLI_ task
-   - select `Inline script` in `Script Location`
-   - add following script in `Inline Script`
+5. create two _Azure CLI_ task
+   - select `Inline script` in `Script Location` and add following script in `Inline Script`  
    ```
-   az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.osProfile.secrets[0].vaultCertificates[0].certificateUrl="$(certificateurl)" --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
+    az vmss update -g $(rgname) -n $(vmssName) --add virtualMachineProfile.osProfile.secrets[0].vaultCertificates "{""certificateUrl"": ""$(certificateurl)"", ""certificateStore"": ""My""}"
+   ```
+   - add another script in `Inline Script`
+   ```
+    az vmss update -g $(rgname) -n $(vmssName) --set virtualMachineProfile.extensionProfile.extensions[0].settings="{""fileUris"": [""$(scripturl)"", ""$(appsettingsurl)""],""commandToExecute"": ""powershell -ExecutionPolicy Unrestricted -File $(scriptfile) -thumbprint $(thumbprint)""}"
    ```
 6. link variable groups (`azure_subscription`, `azure_build`, `azure_vmss`)to upgrade pipeline
 

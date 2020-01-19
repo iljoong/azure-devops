@@ -12,7 +12,6 @@ pool:
   name: 'devopsdemo'
 
 variables:
-- group: azure_subscription
 - group: azure_build
 - name: buildConfiguration
   value: 'Release'
@@ -43,10 +42,8 @@ steps:
     script: |
       # Debug
       Write-Host "$(Build.ArtifactStagingDirectory)\app\app.zip"
-      Write-Host "$(subscription_id)"
-      Write-Host "$(tenant_id)"
-      Write-Host "$(client_id)"
-      Write-Host "$(client_secret)"
+      Write-Host "$(imagename)"
+      Write-Host "$(rgname)"
 
 - task: PowerShell@2
   inputs:
