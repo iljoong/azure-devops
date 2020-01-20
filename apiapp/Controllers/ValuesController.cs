@@ -13,7 +13,7 @@ namespace apiapp.Controllers
     public class ValuesController : ControllerBase
     {
         string teststring;
-        string sqlconn;
+        string sqlconn = "Server=tcp:sqldb.azure.com,1433;Initial Catalog=testdb;Persist Security Info=False;User ID=sqladmin;Password=Sqldatabase@2020;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         public ValuesController(IConfiguration _config)
         {
@@ -25,7 +25,7 @@ namespace apiapp.Controllers
 
             // get config
             teststring = _config["app:teststring"] ?? "NO VALUE SET";
-            sqlconn = _config["app:sqlconn"] ?? "NO VALUE SET";
+            //sqlconn = _config["app:sqlconn"] ?? "NO VALUE SET";
         }
 
         // GET api/values

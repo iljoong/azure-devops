@@ -1,0 +1,61 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+# trigger set
+trigger: none
+#trigger:
+#- master
+
+pool:
+  name: 'devopsdemo'
+
+variables:
+- name: buildConfiguration
+  value: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'apiapp.test/apiapptest.csproj'
+    testRunTitle: 'Test run'
+    
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'apiapp/apiapp.csproj'
+    arguments: '-c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/app'
+    modifyOutputPath: false
+
+- task: CredScan@2
+  inputs:
+    toolMajorVersion: 'V2'
+    scanFolder: '$(Build.SourcesDirectory)/apiapp'
+
+- task: SdtReport@1
+  inputs:
+    AllTools: false
+    APIScan: false
+    BinSkim: false
+    CodesignValidation: false
+    CredScan: true
+    FortifySCA: false
+    FxCop: false
+    ModernCop: false
+    MSRD: false
+    PoliCheck: false
+    RoslynAnalyzers: false
+    SDLNativeRules: false
+    Semmle: false
+    TSLint: false
+    ToolLogsNotFoundAction: 'Standard'
+
+- task: PublishSecurityAnalysisLogs@2
+  inputs:
+    ArtifactName: 'CodeAnalysisLogs'
+    ArtifactType: 'Container'
+    AllTools: true
+    ToolLogsNotFoundAction: 'Standard'
