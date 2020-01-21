@@ -344,6 +344,17 @@
                         ],
                         "windowsConfiguration": {
                             "provisionVMAgent": true,
+                            "winRM": {
+                                "listeners": [
+                                    {
+                                        "protocol": "Http"
+                                    },
+                                    {
+                                        "protocol": "Https",
+                                        "certificateUrl": "[parameters('winrmCertUrl')]"
+                                    }
+                                ]
+                            },
                             "enableAutomaticUpdates": true
                         }
                     },
