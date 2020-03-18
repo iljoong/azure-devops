@@ -2,7 +2,7 @@
 resource "azurerm_network_security_group" "tfagtnsg" {
   name                = "${var.prefix}-agtnsg"
   location            = var.location
-  resource_group_name = azurerm_resource_group.tfrg.name
+  resource_group_name = var.rgname
 
   security_rule {
     name                       = "RDP"
@@ -25,7 +25,7 @@ resource "azurerm_network_security_group" "tfagtnsg" {
 resource "azurerm_public_ip" "tfagtip" {
   name                = "${var.prefix}-agtip"
   location            = var.location
-  resource_group_name = azurerm_resource_group.tfrg.name
+  resource_group_name = var.rgname
   allocation_method   = "Static"
 
   #domain_name_label   = "${var.prefix}agt"
@@ -39,12 +39,12 @@ resource "azurerm_public_ip" "tfagtip" {
 resource "azurerm_network_interface" "tfagtnic" {
   name                      = "${var.prefix}-agtnic"
   location                  = var.location
-  resource_group_name       = azurerm_resource_group.tfrg.name
-  network_security_group_id = azurerm_network_security_group.tfagtnsg.id
+  resource_group_name       = var.rgname
+  #network_security_group_id = azurerm_network_security_group.tfagtnsg.id
 
   ip_configuration {
     name                          = "${var.prefix}-agtnic-conf"
-    subnet_id                     = azurerm_subnet.tfagtvnet.id
+    subnet_id                     = var.subnet_id
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = azurerm_public_ip.tfagtip.id
   }
@@ -54,13 +54,18 @@ resource "azurerm_network_interface" "tfagtnic" {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "tfagtnic" {
+  network_interface_id      = azurerm_network_interface.tfagtnic.id
+  network_security_group_id = azurerm_network_security_group.tfagtnsg.id
+}
+
 # Create virtual machine
 resource "azurerm_virtual_machine" "tfagtvm" {
   name                  = "${var.prefix}agentvm"
   location              = var.location
-  resource_group_name   = azurerm_resource_group.tfrg.name
+  resource_group_name   = var.rgname
   network_interface_ids = [azurerm_network_interface.tfagtnic.id]
-  vm_size               = "Standard_D4s_v3"
+  vm_size               = var.vm_size
 
   storage_os_disk {
     name              = "${var.prefix}-ftosdisk-agt"
@@ -72,7 +77,7 @@ resource "azurerm_virtual_machine" "tfagtvm" {
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2016-Datacenter"
+    sku       = "2019-Datacenter"
     version   = "latest"
   }
 

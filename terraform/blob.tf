@@ -24,8 +24,8 @@ resource "azurerm_storage_blob" "tfblob_iisscript" {
   storage_account_name   = azurerm_storage_account.tfblob.name
   storage_container_name = azurerm_storage_container.tfblob.name
 
-  type   = "block"
-  source = "./blob/iis_script.ps1"
+  type   = "Block"
+  source = "./script/iis_script.ps1"
 
   depends_on = [local_file.appsettings]
 }
@@ -36,13 +36,13 @@ resource "azurerm_storage_blob" "tfblob_appsettings" {
   storage_account_name   = azurerm_storage_account.tfblob.name
   storage_container_name = azurerm_storage_container.tfblob.name
 
-  type   = "block"
-  source = "./blob/appsettings.json"
+  type   = "Block"
+  source = "./script/appsettings.json"
 
   depends_on = [local_file.appsettings]
 }
 
 resource "local_file" "appsettings" {
-  content     = templatefile("./blob/appsettings.tpl", { kvname = "${var.prefix}kv"})
-  filename = "./blob/appsettings.json"
+  content     = templatefile("./script/appsettings.tpl", { kvname = "${var.prefix}kv"})
+  filename = "./script/appsettings.json"
 }

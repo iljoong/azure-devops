@@ -1,6 +1,16 @@
+# release-pipeline in YAML
+# https://aka.ms/yaml
+
+trigger:
+- none
+
 variables:
 - group: azure_subscription
 - group: azure_build
+- group: azure_vmss
+- name: system.debug
+  value: false
+
 
 steps:
 - powershell: |

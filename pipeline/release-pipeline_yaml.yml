@@ -1,0 +1,39 @@
+# release-pipeline in YAML
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+variables:
+- group: azure_subscription
+- group: azure_build
+- group: azure_vmss
+- name: system.debug
+  value: false
+
+resources:
+  pipelines:
+  - pipeline: build_artifact
+    source: build-pipeline
+
+steps:
+- powershell: |
+   # Write your PowerShell commands here.
+   Write-Host "imageId : /subscriptions/$(subscription_id)/resourceGroups/$(rgname)/providers/Microsoft.Compute/images/app$(resources.pipeline.build_artifact.runID)"
+   Write-Host "scripturl: $(scripturl)" 
+   Write-Host "appseetingsurl: $(appsettingsurl)"
+   Write-Host "thumbprint $(thumbprint)"
+   Write-Host "certificateurl: $(certificateurl)"
+   Write-Host "source repo: $(source_repo)"
+  displayName: 'PowerShell Script'
+
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Azure Deployment:Create Or Update Resource Group action'
+  inputs:
+    azureSubscription: 'MyAzure_Subscription'
+    resourceGroupName: '$(rgname)'
+    location: 'Korea Central'
+    csmFile: '$(System.DefaultWorkingDirectory)/template/vmss_edisk.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/template/vmss.parameters.json'
+    overrideParameters: '-vmssName $(vmssName) -vmSku "Standard_D2s_v3" -instanceCount 1 -vnetname $(vnetname) -subnetname $(subnetname) -ilbip $(ilbip) -subnet $(subnet) -adminUsername $(adminUsername) -imageId /subscriptions/$(subscription_id)/resourceGroups/$(rgname)/providers/Microsoft.Compute/images/app$(resources.pipeline.build_artifact.runID) -vaultResourceId $(vaultid) -certificateUrl $(certificateurl) -winrmCertUrl $(winrmCertUrl) -scriptUrl $(scripturl) -appsettingsUrl $(appsettingsurl) -thumbprint $(thumbprint) -identityName $(identityName)'

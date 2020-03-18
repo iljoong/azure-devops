@@ -23,8 +23,8 @@ Start-Process .\dotnet-sdk-3.1.101-win-x64.exe -ArgumentList '/quiet' -Wait
 
 # Install DevOps Agent
 Invoke-WebRequest https://vstsagentpackage.azureedge.net/agent/2.163.1/vsts-agent-win-x64-2.163.1.zip -outfile .\vsts-agent-win-x64-2.163.1.zip
-Expand-Archive -Path .\vsts-agent-win-x64-2.163.1.zip -DestinationPath .\agent
+Expand-Archive -Path .\vsts-agent-win-x64-2.163.1.zip -DestinationPath c:\agent
 
 # Check `dotnet` & `packer` are correctly installed and run agent 
-cd agent
+cd c:\agent
 run.cmd
