@@ -1,7 +1,8 @@
-#Your build pipeline references an undefined variable named ‘subscription_id’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+# this is sample pipeline snippet and not complete YAML pipeline 
 variables:
 - group: azure_subscription
 - group: azure_build
+- group: azure_vmss
 
 steps:
 - powershell: |

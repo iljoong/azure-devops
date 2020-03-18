@@ -18,7 +18,7 @@
 
 ## Variables & Azure Subscription
 
-1. add `variable group` in __Pipeline/Library__, please refer variables in [variables.yml](./variables.yml)
+1. add `variable group` in __Pipeline/Library__, please refer variables in [variables.yml](./pipeline/variables.yml)
     - azure_subscription
     - azure_build
     - azure_vmss
@@ -51,7 +51,7 @@
 
 ## Release Setup
 
-> Unlike build pipeline, you need to create a release pipeline manually. Please refer sample [release pipeline](./azure/release_sample/release-pipeline.yml)
+> Unlike build pipeline, you need to create a release pipeline manually. Please refer sample [release pipeline](./pipeline/release-pipeline-sample.yml)
 
 1. create a new release pipeline (`release-pipeline`) and choose `empty job`
 2. create a stage and name it `Deploy to VMSS`
@@ -81,7 +81,7 @@
 
 ## Upgrade Setup
 
-> Like release pipeline, you need to create it manually. Please refer sample [upgrade pipeline](./azure/release_sample/upgrade-pipeline.yml)
+> Like release pipeline, you need to create it manually. Please refer sample [upgrade pipeline](./pipeline/upgrade-pipeline-sample.yml)
 
 1. create a new release pipeline (`upgrade-pipeline`) and choose `empty job`
 2. create a stage and name it `Upgrade certificate`

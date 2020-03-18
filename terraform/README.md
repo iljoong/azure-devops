@@ -1,11 +1,13 @@
 # Setup DevOps Lab using Terraform
 
+> Revised for Terraform _AzureRM 2.1_
+
 ![DevOps Lab](./azdevopslab.png)
 
 ## Pre-setup
 
 1. Create a user assigned identity
-2. Add this identity in your subscriptio IAM
+2. Add this identity in your subscription IAM
 3. Update a `variables.tf`
 
 ## Run Terraform
@@ -31,7 +33,7 @@ terraform apply
     - create an agent pool
     - get a `PAT` for agent VM setup
 2. Login to Agent VM,
-    - install necessary tools (`dotnet sdk`, `packer`). Please refer [sample install script](./script/install.ps1)
+    - install necessary tools (`dotnet sdk`, `packer`). Please refer [sample install script](./agt/install.ps1)
     - connect `Azure DevOps`
     
 > Please refer [documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-windows?view=azure-devops) for Azure DevOps setup
